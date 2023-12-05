@@ -26,7 +26,10 @@ public class DeParaService {
     private BERR86PartnerRepository bRepository;
 
     @Transactional
-    public ResponseEntity<ResponseDTO> find(ConsultBERR86DTO data) {
+    public ResponseEntity<ResponseDTO> find(ConsultBERR86DTO data, String userBpfromToken) {
+        if (!userBpfromToken.equals(data.userBp())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         List<BERR86Partner> partnersearch = bRepository.searchByIdAndUserBp(Integer.valueOf(data.userId()),
                 data.userBp(), data.document());
         List<AllianzData> allianzsearch = aRepository.searchByData(Integer.valueOf(data.userId()), data.levelId1(),
@@ -39,15 +42,11 @@ public class DeParaService {
         return new ResponseEntity<ResponseDTO>(responseData, HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseDTO> testing(ConsultBERR86DTO data) {
-        /*
-         * List<BERR86Partner> partnersearch =
-         * bRepository.searchByIdAndUserBp(Integer.valueOf(data.userId()),
-         * data.userBp(), data.document());
-         * 
-         * var partner = partnersearch.get(0);
-         * return ("" + partner.getUsercertificate());
-         */
+    public ResponseEntity<ResponseDTO> testing(ConsultBERR86DTO data, String userBpfromToken) {
+        if (!userBpfromToken.equals(data.userBp())) {
+            System.out.println("UserBp not equal");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         List<BERR86Partner> partnersearch = bRepository.searchByIdAndUserBp(Integer.valueOf(data.userId()),
                 data.userBp(), data.document());
         List<AllianzData> allianzsearch = aRepository.searchByData(Integer.valueOf(data.userId()), data.levelId1(),
