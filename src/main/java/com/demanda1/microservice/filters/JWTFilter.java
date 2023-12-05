@@ -30,10 +30,8 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
         String token = this.recoverToken(request);
-        System.out.println(token);
         if (token != null) {
             var subject = tokenService.validateToken(token);
-            System.out.println(subject);
             UserDetails user = partnerRepository.findByUsercertificate(subject);
             if (user != null) {
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
