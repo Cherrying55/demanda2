@@ -39,4 +39,25 @@ public class DeParaService {
         return new ResponseEntity<ResponseDTO>(responseData, HttpStatus.OK);
     }
 
+    public ResponseEntity<ResponseDTO> testing(ConsultBERR86DTO data) {
+        /*
+         * List<BERR86Partner> partnersearch =
+         * bRepository.searchByIdAndUserBp(Integer.valueOf(data.userId()),
+         * data.userBp(), data.document());
+         * 
+         * var partner = partnersearch.get(0);
+         * return ("" + partner.getUsercertificate());
+         */
+        List<BERR86Partner> partnersearch = bRepository.searchByIdAndUserBp(Integer.valueOf(data.userId()),
+                data.userBp(), data.document());
+        List<AllianzData> allianzsearch = aRepository.searchByData(Integer.valueOf(data.userId()), data.levelId1(),
+                data.levelId2());
+        if (partnersearch.isEmpty() || allianzsearch.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        AllianzData allianzdata = allianzsearch.get(0);
+        ResponseDTO responseData = new ResponseDTO(allianzdata.getBroker(), allianzdata.getUserBA());
+        return new ResponseEntity<ResponseDTO>(responseData, HttpStatus.OK);
+    }
+
 }
